@@ -1,7 +1,7 @@
 {
-  "name": "Inventari PPA Torreferrussa",
-  "short_name": "Inventari TRF",
-  "start_url": "/Inventari-Torreferrussa/index.html",
+  "name": "Inventari PPA Montmeló",
+  "short_name": "Inv. Montmeló",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f8fafc",
   "theme_color": "#1d4ed8",
