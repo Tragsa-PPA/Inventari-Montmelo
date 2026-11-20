@@ -64,15 +64,21 @@
  <section id="welcomeScreen" class="welcome-screen" aria-label="Benvinguda a l'inventari de Montmeló">
  <img src="benvinguda-tragsa.jpg" alt="Grupo Tragsa" class="welcome-image" fetchpriority="high">
  <form id="loginForm" class="w-full max-w-[360px] mt-4 flex flex-col gap-3 shrink-0">
+ <input type="text" name="username" value="Inventari Montmeló" autocomplete="username" class="hidden" readonly>
  <input
  type="password"
  id="passwordInput"
+ name="password"
  placeholder="Introdueix la contrasenya"
  autocomplete="current-password"
  class="w-full p-3.5 border border-slate-300 rounded-xl text-center text-base focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition"
  required
  autofocus
  >
+ <label class="flex items-center justify-center gap-2 text-sm text-slate-600 cursor-pointer select-none">
+ <input type="checkbox" id="rememberPass" class="w-4 h-4 accent-brand-700 rounded" checked>
+ Recordar en aquest dispositiu
+ </label>
  <p id="passwordError" class="hidden text-sm text-red-600 font-medium text-center">Contrasenya incorrecta.</p>
  <button id="enterInventory" type="submit" class="welcome-enter">Entrar a l'inventari</button>
  </form>
@@ -165,6 +171,7 @@
  const AUTH_KEY = "inventariPPA_Auth_Montmelo";
  const loginForm = document.getElementById('loginForm');
  const passwordInput = document.getElementById('passwordInput');
+ const rememberPass = document.getElementById('rememberPass');
  const passwordError = document.getElementById('passwordError');
 
  function unlockApp(focusName = true) {
@@ -182,7 +189,11 @@
  loginForm.addEventListener('submit', (e) => {
  e.preventDefault();
  if (passwordInput.value === ACCESS_PASS) {
+ if (rememberPass.checked) {
  localStorage.setItem(AUTH_KEY, ACCESS_PASS);
+ } else {
+ localStorage.removeItem(AUTH_KEY);
+ }
  unlockApp(true);
  } else {
  passwordError.classList.remove('hidden');
