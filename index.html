@@ -91,7 +91,7 @@
  </div>
  </header>
 
- <main inert class="flex-grow p-4 max-w-md mx-auto w-full pb-24">
+ <main inert class="flex-grow p-3 sm:p-4 max-w-md mx-auto w-full pb-24">
  
 <div id="loadingOverlay" class="fixed inset-0 bg-white/80 z-50 flex flex-col items-center justify-center hidden">
  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-700 mb-4"></div>
@@ -161,7 +161,7 @@
  </div>
  </section>
 
- <section class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 relative">
+ <section class="bg-white p-3 sm:p-4 rounded-xl shadow-sm border border-slate-100 relative">
  
 <!-- CERCADOR -->
  <div class="mb-4 relative">
@@ -177,7 +177,7 @@
  <!-- OBSERVACIONS / INCIDÈNCIES -->
  <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
  <h2 class="text-lg font-semibold mb-3 text-slate-700 border-b pb-2">Observacions / Incidències <span class="text-xs font-normal text-slate-400">(Opcional)</span></h2>
- <textarea id="observations" oninput="saveToLocal()" rows="3" placeholder="Ex: Falta X material per afegir a la llista..." class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm resize-y"></textarea>
+ <textarea id="observations" oninput="saveToLocal()" rows="3" placeholder="Ex: Caixa de guants talla M mullada, material reservat per demà..." class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition text-sm resize-y"></textarea>
  </section>
 
  <section class="bg-white p-5 rounded-xl shadow-sm border border-slate-100">
@@ -413,7 +413,7 @@
      sectionDiv.appendChild(catHeader);
 
      const itemsWrapper = document.createElement('div');
-     itemsWrapper.className = "items-wrapper p-3 space-y-3 bg-slate-50/50 rounded-b-xl";
+     itemsWrapper.className = "items-wrapper p-2 sm:p-3 space-y-2.5 bg-slate-50/50 rounded-b-xl";
      
      const arrowSvg = catHeader.querySelector('svg');
      
@@ -455,21 +455,21 @@
 
        const div = document.createElement('div');
        div.id = `card_${id}`;
-       div.className = "product-item flex items-center justify-between gap-2 p-3 border border-slate-200 rounded-lg bg-white shadow-sm transition-all";
+       div.className = "product-item flex items-center justify-between gap-2 p-2.5 sm:p-3 border border-slate-200 rounded-lg bg-white shadow-sm transition-all";
        div.setAttribute('data-name', cleanName.toLowerCase());
        div.setAttribute('data-category', category.name.toLowerCase());
        
        div.innerHTML = `
-       <div class="flex items-center gap-3 min-w-0 flex-1">
-         <div class="w-10 h-10 rounded-md bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-lg border border-brand-200 shrink-0">
+       <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+         <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-brand-100 text-brand-700 flex items-center justify-center font-bold text-base border border-brand-200 shrink-0">
            ${initialLetter}
          </div>
-         <h4 class="font-medium text-slate-800 text-sm leading-tight pr-1 break-words">${cleanName}</h4>
+         <h4 class="font-medium text-slate-800 text-sm leading-snug min-w-0 flex-1 [overflow-wrap:anywhere]">${cleanName}</h4>
        </div>
-       <div class="flex items-center gap-1 shrink-0 ml-2">
-         <button type="button" onclick="updateQty('${id}', -1)" class="w-10 h-10 bg-white border border-slate-300 rounded-full flex items-center justify-center text-2xl font-bold text-slate-600 hover:bg-slate-100 active:bg-slate-200 shadow-sm select-none">-</button>
-         <input type="number" id="qty_${id}" oninput="manualQtyUpdate('${id}')" placeholder="-" class="w-14 h-10 text-center font-bold text-lg bg-white border border-slate-300 rounded-md p-0 focus:ring-2 focus:ring-brand-500 outline-none transition" value="" min="0">
-         <button type="button" onclick="updateQty('${id}', 1)" class="w-10 h-10 bg-brand-100 border border-brand-300 rounded-full flex items-center justify-center text-2xl font-bold text-brand-700 hover:bg-brand-200 active:bg-brand-300 shadow-sm select-none">+</button>
+       <div class="flex items-center gap-1 shrink-0">
+         <button type="button" onclick="updateQty('${id}', -1)" class="w-9 h-9 bg-white border border-slate-300 rounded-full flex items-center justify-center text-xl font-bold text-slate-600 hover:bg-slate-100 active:bg-slate-200 shadow-sm select-none">-</button>
+         <input type="number" id="qty_${id}" oninput="manualQtyUpdate('${id}')" placeholder="-" class="w-12 h-9 text-center font-bold text-base bg-white border border-slate-300 rounded-md p-0 focus:ring-2 focus:ring-brand-500 outline-none transition" value="" min="0">
+         <button type="button" onclick="updateQty('${id}', 1)" class="w-9 h-9 bg-brand-100 border border-brand-300 rounded-full flex items-center justify-center text-xl font-bold text-brand-700 hover:bg-brand-200 active:bg-brand-300 shadow-sm select-none">+</button>
        </div>
        `;
        itemsWrapper.appendChild(div);
