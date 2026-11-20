@@ -64,6 +64,7 @@
  <section id="welcomeScreen" class="welcome-screen" aria-label="Benvinguda a l'inventari de Montmeló">
  <img src="benvinguda-tragsa.jpg" alt="Grupo Tragsa" class="welcome-image" fetchpriority="high">
  <form id="loginForm" class="w-full max-w-[360px] mt-4 flex flex-col gap-3 shrink-0">
+ <div id="authFields" class="flex flex-col gap-3">
  <input type="text" name="username" value="Inventari Montmeló" autocomplete="username" class="hidden" readonly>
  <input
  type="password"
@@ -80,6 +81,7 @@
  Recordar en aquest dispositiu
  </label>
  <p id="passwordError" class="hidden text-sm text-red-600 font-medium text-center">Contrasenya incorrecta.</p>
+ </div>
  <button id="enterInventory" type="submit" class="welcome-enter">Entrar a l'inventari</button>
  </form>
  </section>
@@ -170,31 +172,41 @@
  const ACCESS_PASS = "tragsa2026";
  const AUTH_KEY = "inventariPPA_Auth_Montmelo";
  const loginForm = document.getElementById('loginForm');
+ const authFields = document.getElementById('authFields');
  const passwordInput = document.getElementById('passwordInput');
  const rememberPass = document.getElementById('rememberPass');
  const passwordError = document.getElementById('passwordError');
+ const enterInventoryBtn = document.getElementById('enterInventory');
 
- function unlockApp(focusName = true) {
+ function unlockApp() {
  document.getElementById('welcomeScreen').hidden = true;
  document.querySelector('header').removeAttribute('inert');
  document.querySelector('main').removeAttribute('inert');
- if (focusName) document.getElementById('workerName').focus();
+ document.getElementById('workerName').focus();
  }
 
- // Si el dispositiu ja té la contrasenya guardada, entra directe
- if (localStorage.getItem(AUTH_KEY) === ACCESS_PASS) {
- unlockApp(false);
+ // Si la contrasenya ja està guardada, mantenim la pantalla de benvinguda però amaguem el camp de contrasenya
+ const isAlreadyAuthorized = localStorage.getItem(AUTH_KEY) === ACCESS_PASS;
+ if (isAlreadyAuthorized) {
+ authFields.classList.add('hidden');
+ passwordInput.required = false;
+ enterInventoryBtn.focus();
  }
 
  loginForm.addEventListener('submit', (e) => {
  e.preventDefault();
+ if (localStorage.getItem(AUTH_KEY) === ACCESS_PASS) {
+ unlockApp();
+ return;
+ }
+
  if (passwordInput.value === ACCESS_PASS) {
  if (rememberPass.checked) {
  localStorage.setItem(AUTH_KEY, ACCESS_PASS);
  } else {
  localStorage.removeItem(AUTH_KEY);
  }
- unlockApp(true);
+ unlockApp();
  } else {
  passwordError.classList.remove('hidden');
  passwordInput.value = '';
@@ -345,7 +357,6 @@
    flatProductsList = [];
  
    inventoryCategories.forEach((category, catIdx) => {
-     // S'ha eliminat 'overflow-hidden' i 'sticky' a les targetes tancades perquè no tallin ni tapin el primer producte
      const sectionDiv = document.createElement('div');
      sectionDiv.className = 'category-section bg-white rounded-xl shadow-sm border border-slate-200 mb-4';
      
@@ -370,7 +381,6 @@
         arrowSvg.classList.add('rotate-180');
      }
 
-     // Lògica per obrir i tancar el desplegable
      catHeader.addEventListener('click', () => {
         if (itemsWrapper.style.display === 'none') {
             itemsWrapper.style.display = 'block';
@@ -390,7 +400,6 @@
 
        const cleanName = itemName.trim();
        const id = `prod_${catIdx}_${itemIdx}`;
-       // Guardem itemName original per si a l'Excel té un espai al final, però mostrem cleanName
        flatProductsList.push({ id: id, name: itemName, category: category.name });
        
        if (inventoryCounts[id] === undefined) {
