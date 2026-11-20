@@ -28,7 +28,7 @@
  #signatureCanvas { touch-action: none; }
  body { background-color: #f8fafc; }
  input[type="number"]::-webkit-inner-spin-button, 
-input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
  input[type="number"] { -moz-appearance: textfield; }
 
  .welcome-screen {
@@ -47,7 +47,6 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
  flex-shrink: 0;
  width: 100%;
  max-width: 360px;
- margin-top: 16px;
  padding: 16px 24px;
  border: 0;
  border-radius: 12px;
@@ -64,7 +63,19 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
 
  <section id="welcomeScreen" class="welcome-screen" aria-label="Benvinguda a l'inventari de Montmeló">
  <img src="benvinguda-tragsa.jpg" alt="Grupo Tragsa" class="welcome-image" fetchpriority="high">
- <button id="enterInventory" type="button" class="welcome-enter" autofocus>Entrar a l'inventari</button>
+ <form id="loginForm" class="w-full max-w-[360px] mt-4 flex flex-col gap-3 shrink-0">
+ <input
+ type="password"
+ id="passwordInput"
+ placeholder="Introdueix la contrasenya"
+ autocomplete="current-password"
+ class="w-full p-3.5 border border-slate-300 rounded-xl text-center text-base focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition"
+ required
+ autofocus
+ >
+ <p id="passwordError" class="hidden text-sm text-red-600 font-medium text-center">Contrasenya incorrecta.</p>
+ <button id="enterInventory" type="submit" class="welcome-enter">Entrar a l'inventari</button>
+ </form>
  </section>
 
  <header inert class="bg-brand-700 text-white p-4 shadow-md sticky top-0 z-20 h-[68px]">
@@ -150,11 +161,39 @@ input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; marg
  </main>
 
  <script>
- document.getElementById('enterInventory').addEventListener('click', () => {
+ const ACCESS_PASS = "tragsa2026";
+ const AUTH_KEY = "inventariPPA_Auth_Montmelo";
+ const loginForm = document.getElementById('loginForm');
+ const passwordInput = document.getElementById('passwordInput');
+ const passwordError = document.getElementById('passwordError');
+
+ function unlockApp(focusName = true) {
  document.getElementById('welcomeScreen').hidden = true;
  document.querySelector('header').removeAttribute('inert');
  document.querySelector('main').removeAttribute('inert');
- document.getElementById('workerName').focus();
+ if (focusName) document.getElementById('workerName').focus();
+ }
+
+ // Si el dispositiu ja té la contrasenya guardada, entra directe
+ if (localStorage.getItem(AUTH_KEY) === ACCESS_PASS) {
+ unlockApp(false);
+ }
+
+ loginForm.addEventListener('submit', (e) => {
+ e.preventDefault();
+ if (passwordInput.value === ACCESS_PASS) {
+ localStorage.setItem(AUTH_KEY, ACCESS_PASS);
+ unlockApp(true);
+ } else {
+ passwordError.classList.remove('hidden');
+ passwordInput.value = '';
+ passwordInput.focus();
+ if (navigator.vibrate) navigator.vibrate([50, 50, 50]);
+ }
+ });
+
+ passwordInput.addEventListener('input', () => {
+ passwordError.classList.add('hidden');
  });
 
  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzYzX_OtxQ-0z1x_oarU4I2lHRSKqpf06I8qS65VNtE1QGuzv9pT-9LLrKhruN7wqnf/exec";
